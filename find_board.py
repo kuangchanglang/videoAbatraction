@@ -3,6 +3,8 @@ import time
 import numpy as np
 import math_calc as mc
 
+'''
+'''
 def find_same_cnt(output_dir, video_path, frames_cnt, interval):
     video = cv2.VideoCapture(video_path)
     width = int(video.get(3))
