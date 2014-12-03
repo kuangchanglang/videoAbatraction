@@ -21,7 +21,7 @@ def convert_background(binary_img):
                 - binary_img[height-1,0] - binary_img[height-1][width-1]
     white_cnt = total / 255 
     black_cnt = (height*2+width*2-4) - white_cnt
-    print 'w,b:', white_cnt, black_cnt
+#    print 'w,b:', white_cnt, black_cnt
     if white_cnt < black_cnt:
         binary_img = ~binary_img # turn to white background
     
@@ -67,7 +67,7 @@ def seperate(img, pos):
     imgs = []
     for po in pos:
         cut_img = img[0:,po[0]:po[1]+1]
-        cut_img = cv2.resize(cut_img,(13,26))
+        cut_img = cv2.resize(cut_img,(24,24))
         imgs.append(cut_img)
     return imgs
 

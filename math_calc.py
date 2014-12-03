@@ -2,7 +2,7 @@ import numpy as np
 
 
 '''
-    @desribe 
+    @describe 
         img1 and img2 must be in the same shape
         size(shape) should be 3
     @param img1
@@ -17,6 +17,26 @@ def diff(img1, img2):
             for c in range(img1.shape[2]):
                 res[h][w][c] = max(img1[h][w][c],img2[h][w][c]) - min(img1[h][w][c],img2[h][w][c])
     return res 
+
+'''
+    @describe
+        return count of same pixel in img1 and img2
+        img1 and img2 must be in same size
+    @param img1
+    @param img2
+    @return cnt
+'''
+def same_cnt(img1,img2):
+    cnt = 0
+    for h in range(img1.shape[0]):
+        for w in range(img1.shape[1]):
+            res = 0
+            for c in range(img1.shape[2]):
+                res += max(img1[h][w][c],img2[h][w][c]) - min(img1[h][w][c],img2[h][w][c])
+        if res < 10:
+            cnt += 1
+    print cnt
+    return cnt
 
 '''
     @param img

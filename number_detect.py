@@ -3,6 +3,7 @@ import cv2
 import time 
 import math_calc as mc
 import number_cut as nc
+import histgram as hist
 
 img = ''
 rects = []
@@ -106,6 +107,13 @@ def on_mouse(event, x, y, flags, param):
             print 'add region', point_s, point_e
 #            print 'rectangle add ', sub_imgs
 
+
+def same_region(img1, img2):
+    dist = mc.diff(img1,img2)
+    if mc.average(dist) > 20:
+        retur True
+    return False
+
 '''
     @param img 
     @param rects regions of the image
@@ -118,15 +126,15 @@ def cut_rects(img, rects):
     global img_idx
     for i, rect in enumerate(rects):
         img2 = get_subimage(img, rect[0], rect[1])
-        dist = mc.diff(sub_imgs[i], img2)
-#        print dist
-        if mc.average(dist) > 20:
+#        dist = mc.diff(sub_imgs[i], img2)
+#        if mc.average(dist) > 20:
+        if not same_region(sub_imgs[i],img2):
             break
         imgs = nc.get_single_numbers(img2)
         for number in imgs:
-            cv2.imwrite('train/'+str(img_idx)+'.jpg', number)
-#        write_binary(img2, 'train/'+str(img_idx)+'.jpg')
+            cv2.imwrite('data/train/'+str(img_idx)+'.jpg', number)
             img_idx += 1
+
 
 def draw_img(filepath):
     global img

@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 import time 
+
 def get_hist_rgb(img):
     hist_size = [256, 256, 256] # [hsize,ssize]
     r_range = [0, 256]
