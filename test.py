@@ -71,7 +71,25 @@ def test_same_cnt():
     img2 = cv2.imread('data/tmp/3.jpg')
     cnt = mc.same_cnt(img1, img2)
     print cnt
+
+def read_video_time(filepath):
+    cap = cv2.VideoCapture(filepath)
+    tick = time.time()
+    i = 0
+    while(cap.isOpened()):
+        ret, frame = cap.read()
+        if not ret:
+            break
+        i += 1
+        
+    cap.release()
+    tick2 = time.time()
+    print tick2-tick
+    print i
+
+    cv2.destroyAllWindows()
     
 if __name__ == '__main__':
 #    play_with_bar(filepath = 'D:\\BaiduYunDownload\\2.rmvb')
-    test_same_cnt()
+#    test_same_cnt()
+    read_video_time(filepath = 'D:\\BaiduYunDownload\\2.rmvb')

@@ -9,13 +9,13 @@ from sklearn.cluster import KMeans
 def cluster():
     data = np.array([])
     filecnt = 0
-    dir = 'data/8'
+    dir = 'data/x11'
     for filename in os.listdir(dir):
         img = cv2.imread(dir + '/'+ filename, 0)
         img.reshape(1,-1)
         data = np.append(data,img)
         filecnt += 1
-    kmeans = KMeans(init='k-means++',n_clusters = 2, n_init = 10)
+    kmeans = KMeans(init='k-means++',n_clusters = 4, n_init = 10)
     data = data.reshape(filecnt, -1)
     kmeans.fit(data)
     print kmeans.labels_

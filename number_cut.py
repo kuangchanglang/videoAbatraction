@@ -33,7 +33,7 @@ def convert_background(binary_img):
     while bottom>top and sum(binary_img[bottom]) == 255 * width:
         bottom -= 1
         
-    binary_img = binary_img[top:bottom,0:]
+    binary_img = binary_img[top:bottom+1,0:]
     return binary_img 
     
 '''
@@ -47,21 +47,27 @@ def get_seperate_pos(binary_img, background = 255):
     res = []
     start, end = 0, 0
     for i in range(cols):
-        if sum(binary_img[0:,i]) == background * rows:
+        # may have 3 noise points in middle of the column, this limit to white background
+        # if all column are background except 3 noise and first 6 are all background, this column should be background
+         if sum(binary_img[0:,i]) == background * rows:
+#        if sum(binary_img[0:,i]) >= background * (rows-3) \
+#            and sum(binary_img[0:4,i]) == background * 4 :
             if i==0 or i-start==1:
                 start = i
             else:
                 end = i
-                res.append((start,end))
+                if end - start > 2:
+                    res.append((start,end))
                 start = i #next start
     if i-start > 3: # last 
         res.append((start,i))
     return res
 
 '''
+    @describe cut img into serveral subimgs, column from start_point to end_point
     @param img
     @param pos regions in such form: [(start_point,end_point)...]
-    @return cut img into serveral subimgs, column from start_point to end_point
+    @return images where each image contains only one number
 '''
 def seperate(img, pos):
     imgs = []

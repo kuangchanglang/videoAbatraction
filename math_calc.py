@@ -48,5 +48,5 @@ def average(img):
         for w in range(img.shape[1]):
             res += sum(img[h][w])
     res /= img.size * img.shape[2]
-    print 'sum: ',res
+    #print 'sum: ',res
     return res
