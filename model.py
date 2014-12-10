@@ -33,8 +33,8 @@ def write_img_data():
     np.save('label.npy',label)
 
 def test_accuracy():
-    data = np.load('data.npy')
-    label = np.load('label.npy')
+    data = np.load('data/data.npy')
+    label = np.load('data/label.npy')
     data_train, data_test, label_train, label_test = train_test_split(data,label,test_size=0.9,random_state = 42) 
     print data_train.shape, data_test.shape, label_train.shape, label_test.shape
     clf = svm.SVC(kernel = 'linear', C = 100)
@@ -72,8 +72,8 @@ def recognize_number(clf, img):
     res = 0
     for number in imgs:
         digit = pred(clf, number)
-        res = res * 10 + digit
-    return res[0]
+        res = res * 10 + digit[0]
+    return res
 
 
 

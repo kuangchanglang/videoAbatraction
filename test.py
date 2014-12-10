@@ -72,13 +72,18 @@ def test_same_cnt():
     cnt = mc.same_cnt(img1, img2)
     print cnt
 
+'''
+    @describe test video time using all read method 
+    @param filepath
+    @return none
+'''
 def read_video_time(filepath):
     cap = cv2.VideoCapture(filepath)
     tick = time.time()
     i = 0
     while(cap.isOpened()):
         ret, frame = cap.read()
-        if not ret:
+        if not ret or i > 10000:
             break
         i += 1
         
@@ -89,7 +94,59 @@ def read_video_time(filepath):
 
     cv2.destroyAllWindows()
     
+'''
+    @describe test video time using skip method below
+            cap.set(cv2.cv.CV_CAP_PROP_POS_FRAMES, pos)
+    @param filepath 
+    @return none
+'''
+def read_video_time_skip(filepath):
+    cap = cv2.VideoCapture(filepath)
+    tick = time.time()
+    pos = 0
+    i = 0
+    while(cap.isOpened()):
+        ret, frame = cap.read()
+        if not ret or pos > 10000:
+            break
+        i += 1
+        pos += 5
+        cap.set(cv2.cv.CV_CAP_PROP_POS_FRAMES, pos)
+        
+    cap.release()
+    tick2 = time.time()
+    print tick2-tick
+    print i
+
+'''
+    @describe test video time using grab 4 frames and read 1 frame
+    @param filepath
+    @return none
+'''
+def read_video_time_grab(filepath):
+    cap = cv2.VideoCapture(filepath)
+    tick = time.time()
+    i = 0
+    while(cap.isOpened()):
+        if i%5 != 0:
+            ret = cap.grab()
+        else:
+            ret, frame = cap.read()
+        if not ret or i > 10000:
+            break
+        i += 1
+        
+    cap.release()
+    tick2 = time.time()
+    print tick2-tick
+    print i
+
+    cv2.destroyAllWindows()
+    cv2.destroyAllWindows()
 if __name__ == '__main__':
 #    play_with_bar(filepath = 'D:\\BaiduYunDownload\\2.rmvb')
 #    test_same_cnt()
-    read_video_time(filepath = 'D:\\BaiduYunDownload\\2.rmvb')
+    filepath = 'D:\\BaiduYunDownload\\5.mp4'
+    read_video_time_grab(filepath =filepath) 
+    read_video_time(filepath = filepath)
+    read_video_time_skip(filepath = filepath)

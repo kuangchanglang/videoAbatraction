@@ -134,5 +134,5 @@ def on_change(pos):
     video.set(cv2.cv.CV_CAP_PROP_POS_FRAMES, pos)
     
 if __name__ == '__main__':
-    play(filepath = 'D:\\BaiduYunDownload\\5.mp4')
+    play(filepath = 'D:\\BaiduYunDownload\\2.rmvb')
     #test_same_cnt()

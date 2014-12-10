@@ -1,3 +1,5 @@
+__author__ = 'backing'
+
 import numpy as np
 import cv2
 import time 

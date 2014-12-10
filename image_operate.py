@@ -1,3 +1,5 @@
+__author__ = 'backing'
+
 import numpy as np
 import math_calc as mc
 import cv2
@@ -13,7 +15,7 @@ def get_subimage(img, point_s, point_e):
     x2 = max(point_s[1],point_e[1])
     y1 = min(point_s[0],point_e[0])
     y2 = max(point_s[0],point_e[0])
-    return img[x1:x2,y1:y2]
+    return img[x1:x2+1,y1:y2+1]
 
 
 ''' 
@@ -48,7 +50,7 @@ def write_binary(img, outputpath):
     @param frame 
     @param logo team logo that select by user
     @param rect region of label_img
-    @return True if this frame has label_img, otherwise false
+    @return True if this frame has logo, otherwise false
 '''
 def has_score_board(frame, logo, rect):
     if len(rect) == 0:
