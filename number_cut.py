@@ -1,10 +1,12 @@
 import numpy as np
+import model
+import image_operate as op
 import cv2
 
 '''
-    @describe find arround first row, first column, last row, last column 
+    @description find arround first row, first column, last row, last column 
                 to see which should be background
-                then convert background to black, content should be white
+                then convert background to white, content should be black
                 
                 0 - black, 255 - white                
     @param img binary_img
@@ -37,7 +39,7 @@ def convert_background(binary_img):
     return binary_img 
     
 '''
-    @describe get seperate position which column are all background
+    @description get seperate position which column are all background
     @param binary_img with only 0 and 255
     @param background
     @return [(start,end),(start,end)...]
@@ -64,7 +66,7 @@ def get_seperate_pos(binary_img, background = 255):
     return res
 
 '''
-    @describe cut img into serveral subimgs, column from start_point to end_point
+    @description cut img into serveral subimgs, column from start_point to end_point
     @param img
     @param pos regions in such form: [(start_point,end_point)...]
     @return images where each image contains only one number
@@ -78,7 +80,7 @@ def seperate(img, pos):
     return imgs
 
 '''
-    @describe convert color img to binary img
+    @description convert color img to binary img
     @param img
     @return binary image
 '''
@@ -89,21 +91,102 @@ def convert_binary(img):
     return binary_img
 
 '''
-    @describe first detect background, then cut into numbers
+    @description first detect background, then cut into numbers
     @param img color img
-    @return return each single number size 13*26 in black-and-white
+    @return return each single number size 13*26 in black-and-white, and position of each number
 '''
 def get_single_numbers(img):
     img = convert_binary(img)
     img = convert_background(img)
     pos = get_seperate_pos(img)
     imgs = seperate(img, pos)
-    return imgs
+    return imgs, pos
+
+
+'''
+    @description cut each text from a board image
+    @param board image in color
+    @return imgs, pos
+            imgs are each text in 24*24 size
+            pos are position of each text
+'''
+def get_text(board):
+    board = op.get_binary(board)
+    cv2.imshow('bin', board)
+    height, width = board.shape
+#    print height,width
+    left,right = 0,0
+    imgs = []
+    pos = []
+    row = 0
+
+    # eliminate left few columns that are not backgound
+    while row < width and sum(board[0:,row]) != 0 and sum(board[0:,row])!=255 * height:
+        row += 1
+
+    while row < width:
+        #sum of this row
+        background = 0
+        pixel_sum = sum(board[0:,row])
+        while pixel_sum == 0 or pixel_sum == 255 * height:
+        # eliminate background
+            background = pixel_sum
+            row += 1
+            if row >= width:
+                break
+            pixel_sum = sum(board[0:,row])
+#            print 'x',pixel_sum, row
+                
+        left = row
+        if row >= width:
+            break
+        pixel_sum = sum(board[0:,row])
+        while row < width and pixel_sum != 0 and pixel_sum != 255 * height:
+            row += 1
+            if row >= width:
+                break
+            pixel_sum = sum(board[0:,row])
+            
+        right = row
+#        print left,right
+        # if this interval satisfy our need 
+        if right - left < 3 or right - left > 40:
+            continue
+        single = board[0:,left:right+1]
+        # convert background to black
+        if background == 0:
+            single = ~single
+
+        # eliminate top and bottom backgoound
+        top = 0
+        while top < height and sum(single[top,0:])==255*(right-left+1):
+            top +=1 
+        bottom = height - 1
+        while bottom > top and sum(single[bottom,0:])==255*(right-left+1):
+            bottom -= 1
+        if bottom - top < 10 or bottom - top < height / 2:
+            continue
+
+        pos.append((left,top))
+        img = cv2.resize(single[top:bottom+1],(24,24))
+
+        imgs.append(img)
+    return imgs, pos
+
+'''
+    @test
+'''
+def test_get_text(img):
+    imgs, pos = get_text(img)
+    print pos
+    clf = model.load_classifier()
+    for i,img in enumerate(imgs):
+        cv2.imshow(str(i),img)
+        print model.pred(clf,img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-    img = cv2.imread('train/31.jpg')
-    img = convert_binary(img)
-    img = convert_background(img)
-    cv2.imshow('haha',img)
-    cv2.waitKey(0)
+    img = cv2.imread('1.jpg')
+    test_get_text(img)
     

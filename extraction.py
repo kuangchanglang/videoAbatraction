@@ -17,7 +17,7 @@ target_imgs = []
 video = ""
 step = 5 # we check frames each n steps, default 5
 '''
-    @describe start to work
+    @description start to work
     @param filepath input video filepath
     @return none
 '''
@@ -40,7 +40,7 @@ def work(input_path, output_path):
     video.release()
 
 '''
-    @describe select score board position 
+    @description select score board position 
     @param video
     @return True if selection is done, otherwise False
 '''
@@ -52,7 +52,7 @@ def select_score_pos(video):
     frames = video.get(cv2.cv.CV_CAP_PROP_FRAME_COUNT)
     cv2.cv.CreateTrackbar('tracker', win_name, 0, int(frames), on_change)
     while(video.isOpened()):
-        ret, img = video.read()
+        ret, img = video.red()
         if not ret:
             break
         cv2.imshow(win_name, img) 
@@ -69,7 +69,7 @@ def select_score_pos(video):
 
 
 '''
-    @describe traversal video and find frames that are 24 sec, camera change, and score change(+2p,+3p)
+    @description traversal video and find frames that are 24 sec, camera change, and score change(+2p,+3p)
     @param video
     @return 
 '''
@@ -87,7 +87,7 @@ def get_score_info(video):
     clf = model.load_classifier()
     while(video.isOpened()):
         if pos % step == 0: 
-            ret, frame = video.read()
+            ret, frame = video.red()
         else:
             ret = video.grab()
         
@@ -142,7 +142,7 @@ def get_score_info(video):
     return score_frames,twenty_four_frames,camera_change_frames
 
 '''
-    @describe get video cut intervals 
+    @description get video cut intervals 
     @param video
     @param score_frames score change frames
     @param tf_frames twenty four second frames
@@ -189,7 +189,7 @@ def get_cut_intervals(fps, score_frames, tf_frames, camera_frames):
     print 'cut'
 
 '''
-    @describe cut video by intervals, then write to output_path
+    @description cut video by intervals, then write to output_path
     @param video
     @param output_path
     @param intevals, array, each element is an tuple(start_frame, end_frame), and sorted by start frame
@@ -218,7 +218,7 @@ def cut_video(video, output_path, intervals):
             if pos < start:
                 ret = video.grab()
             elif pos < end:
-                ret, frame = video.read()
+                ret, frame = video.red()
             else:
                 break
         
@@ -252,7 +252,7 @@ def test_get_intervals(input_path):
     print intervals
 
 '''
-    @describe judge if cur_score is a recognize mistake
+    @description judge if cur_score is a recognize mistake
     @param cur_score
     @param last_score
     @return True if is noise where cur_score is much larger than last_score, because each offense can get as much as 3 points, otherwise false
@@ -277,14 +277,14 @@ def score_two_or_three(cur_score , last_score):
         return False
 
 '''
-    @describe on mouse do nothing
+    @description on mouse do nothing
 '''
 def on_mouse_do_nothing(event, x, y, flags, param):
     pass
             
 
 '''
-    @describe mouse event on video play
+    @description mouse event on video play
     @param event
     @param x x-alis in pixel
     @param y y-alis in pixel
@@ -297,7 +297,7 @@ def on_mouse(event, x, y, flags, param):
     global img
     global rects
     green = [0x0,0xFF,0x0]
-    read =  [0x0,0x0,0xFF]
+    red =  [0x0,0x0,0xFF]
     if event == cv2.cv.CV_EVENT_LBUTTONDOWN:
         img_cpy = img.copy() # copy image to draw rectangle
         point_s = (x,y)
@@ -313,14 +313,14 @@ def on_mouse(event, x, y, flags, param):
         point_e = (x,y)
         if point_s != point_e:
             cv2.circle(img_cpy, point_e, 2, green) # draw point
-            cv2.rectangle(img_cpy, point_s, point_e, read)
+            cv2.rectangle(img_cpy, point_s, point_e, red)
             cv2.imshow(win_name,img_cpy)
     elif event == cv2.cv.CV_EVENT_LBUTTONUP:
         point_e = (x,y)
         img_cpy = img.copy() # copy image to draw rectangle
         if point_s != point_e:
             cv2.circle(img_cpy, point_e, 2, green)
-            cv2.rectangle(img_cpy, point_s, point_e, read)
+            cv2.rectangle(img_cpy, point_s, point_e, red)
             cv2.imshow(win_name,img_cpy)
             img2 = nd.get_subimage(img, point_s, point_e)
 #            img2 = cv2.resize(img2,(26,26))
@@ -331,8 +331,8 @@ def on_mouse(event, x, y, flags, param):
 
 
 '''
-    @describe action on video cracker bar change
-    @describe pos position of frame to be show
+    @description action on video cracker bar change
+    @description pos position of frame to be show
     @return none
 '''
 def on_change(pos):

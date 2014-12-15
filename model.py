@@ -32,6 +32,9 @@ def write_img_data():
     np.save('data.npy',data)
     np.save('label.npy',label)
 
+'''
+    @test
+'''
 def test_accuracy():
     data = np.load('data/data.npy')
     label = np.load('data/label.npy')
@@ -47,20 +50,35 @@ def test_accuracy():
     print metrics.accuracy_score(label_test,predict)
 
 def load_classifier():
-    data = np.load('data.npy')
-    label = np.load('label.npy')
+    data = np.load('data/data.npy')
+    label = np.load('data/label.npy')
     #clf = KNeighborsClassifier()
-    clf = svm.SVC(kernel = 'linear', C = 100)
+    clf = svm.SVC(probability = True, kernel = 'linear', C = 100)
     clf.fit(data,label)
     return clf
 
 '''
     @param clf classifier
     @param img img to be classified
-    @return class value
+    @return class label for sample img 
 '''
 def pred(clf, img):
     return clf.predict(img.reshape(1,-1))
+
+'''
+    @param clf classifier
+    @param img img to be classified
+    @return class label for sample img and prob in range [0,...]
+                         where prob close 0 means better similarity
+'''
+def pred_prob(clf, img):
+    res = clf.predict_log_proba(img.reshape(1,-1))
+    min_pro, label = 100,0
+    for i, pro in enumerate(res[0]):
+        if abs(pro)<min_pro:
+            min_pro = abs(pro)
+            label = i
+    return label, min_pro
     
 ''' 
     @param clf classifier
@@ -75,6 +93,13 @@ def recognize_number(clf, img):
         res = res * 10 + digit[0]
     return res
 
+'''
+    @test
+'''
+def test_pred_pos():
+    clf = load_classifier()
+    img = cv2.imread('data/train5/50114.jpg',0)
+    print pred_prob(clf, img)
 
 
 if __name__ == '__main__':
@@ -83,6 +108,6 @@ if __name__ == '__main__':
 #    print img.shape
  
 #    print predict(clf,img)
-
-    test_accuracy()
+    test_pred_pos()
+#    test_accuracy()
 #    write_img_data()

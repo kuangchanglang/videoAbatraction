@@ -51,7 +51,7 @@ def play(filepath):
     cv2.destroyAllWindows()
 
 '''
-    @describe regnize both teams' score and 24 sec board in one frame, then show them on frame
+    @description regnize both teams' score and 24 sec board in one frame, then show them on frame
     @param clf classifier used to recognize img number
     @param img frame that to be show 
     @param rects rectangle positions where score and 24 sec board displayed
@@ -71,14 +71,14 @@ def show_recognize(clf, img, rects):
 #            print res 
 
 '''
-    @describe on mouse do nothing
+    @description on mouse do nothing
 '''
 def on_mouse_do_nothing(event, x, y, flags, param):
     pass
             
 
 '''
-    @describe mouse event on video play
+    @description mouse event on video play
     @param event
     @param x x-alis in pixel
     @param y y-alis in pixel
@@ -125,8 +125,8 @@ def on_mouse(event, x, y, flags, param):
 
 
 '''
-    @describe action on video cracker bar change
-    @describe pos position of frame to be show
+    @description action on video cracker bar change
+    @param pos position of frame to be show
     @return none
 '''
 def on_change(pos):
