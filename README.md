@@ -1,4 +1,4 @@
 videoAbatraction
 ================
 
-To extract all score movement from nba video
+To extract all scoring movements from nba video
